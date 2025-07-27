@@ -1,0 +1,199 @@
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+.main {
+    padding: 30px 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+.user-profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+}
+
+.profile-image__wrapper {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    /* 画像がはみ出さないように */
+    display: flex;
+    /* 中央寄せのためにflexboxを使用 */
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    /* 縮小されないように */
+}
+
+/* グレーのプレースホルダー */
+.profile-image__placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: #D9D9D9;
+    border-radius: 50%;
+}
+
+/* 実際に表示される画像 */
+.profile-image__actual {
+    width: 100%;
+    /* 親要素の幅いっぱいに */
+    height: 100%;
+    /* 親要素の高さいっぱいに */
+    object-fit: cover;
+    /* 画像がアスペクト比を維持しつつ、コンテナを埋めるように */
+    border-radius: 50%;
+    /* 円形を維持 */
+}
+
+.user-profile__name {
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: auto;
+    /* プロフィール編集ボタンを右に寄せる */
+    margin-left: 70px;
+}
+
+.user-profile__edit-button {
+    background-color: #fff;
+    color: #e5004f;
+    /* 赤系の色 */
+    border: 1px solid #e5004f;
+    padding: 8px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.user-profile__edit-button:hover {
+    background-color: #e5004f;
+    color: #fff;
+}
+
+/* プロフィールタブ (出品した商品 / 購入した商品) */
+.profile-tabs {
+    margin-bottom: 30px;
+}
+
+.profile-tabs__list {
+    display: flex;
+    border-bottom: 1px solid #eee;
+}
+
+.profile-tabs__item {
+    padding-bottom: 10px;
+}
+
+.profile-tabs__link {
+    font-size: 16px;
+    font-weight: bold;
+    color: #666;
+    padding: 0 5px;
+    margin-right: 30px;
+    /* タブ間のスペース */
+    transition: color 0.3s ease;
+    text-decoration: none;
+}
+
+.profile-tabs__link:hover {
+    color: #007bff;
+}
+
+.profile-tabs__link--active {
+    color: #007bff;
+    border-bottom: 3px solid #007bff;
+}
+
+/* 商品リスト */
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    /* 商品の幅を調整 */
+    gap: 20px;
+    /* 商品間の隙間 */
+}
+
+.product-item {
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+}
+
+.product-item:hover {
+    transform: translateY(-5px);
+    /* ホバーで少し浮き上がる */
+}
+
+.product-item__image-wrapper {
+    width: 100%;
+    /* 商品画像の縦横比を保ちつつ、枠に収める */
+    padding-top: 75%;
+    /* 4:3の比率 (高さを幅の75%にする) */
+    position: relative;
+    background-color: #f5f5f5;
+    /* 画像がない場合の背景色 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    /* 画像がはみ出さないように */
+}
+
+.product-item__image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* 画像をボックスに合わせてトリミング */
+}
+
+/* プレースホルダーのテキストを画像中央に表示 */
+.product-item__image-wrapper::before {
+    content: "商品画像";
+    /* 画像がない場合のテキスト */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #999;
+    font-size: 18px;
+    font-weight: bold;
+    pointer-events: none;
+    /* テキストがクリックイベントを邪魔しないように */
+}
+
+.product-item__name {
+    padding: 10px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    white-space: nowrap;
+    /* テキストを改行しない */
+    overflow: hidden;
+    /* はみ出したテキストを隠す */
+    text-overflow: ellipsis;
+    /* はみ出したテキストを...で表示 */
+}

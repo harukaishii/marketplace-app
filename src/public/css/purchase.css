@@ -1,0 +1,194 @@
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.main {
+    padding: 30px 0;
+}
+
+.container.purchase-container {
+    max-width: 960px;
+    /* 全体の幅を調整 */
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    /* Flexboxで左右のカラムを配置 */
+    gap: 30px;
+    /* カラム間の隙間 */
+    align-items: flex-start;
+    /* 上揃え */
+}
+
+/* 左側の購入詳細セクション */
+.purchase-details-wrapper {
+    flex-basis: 60%;
+    /* 左側カラムの幅 */
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.product-summary {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.product-summary__image-wrapper {
+    width: 80px;
+    height: 80px;
+    background-color: #f5f5f5;
+    /* プレースホルダー背景 */
+    border: 1px solid #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    margin-right: 15px;
+    flex-shrink: 0;
+    /* 画像が縮まないように */
+}
+
+.product-summary__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-summary__info {
+    flex-grow: 1;
+}
+
+.product-summary__name {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.product-summary__price {
+    font-size: 16px;
+    color: black;
+    font-weight: bold;
+}
+
+.section-divider {
+    border: none;
+    border-top: 1px dashed #ccc;
+    /* 点線区切り */
+    margin: 30px 0;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    /* 配送先と変更するを両端に寄せる */
+    align-items: center;
+}
+
+.payment-select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    appearance: none;
+    /* デフォルトの矢印を消す */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%00-13.2-6.5H18.2c-5%200-9.3%203.4-11.7%208.3-2.4%204.9-1.9%2010.5%201.3%2014.7l132.6%20140.2c3.5%203.8%208.3%206.1%2013.2%206.1s9.7-2.4%2013.2-6.1L285.5%2084.7a17.6%2017.6%200%200%001.5-15.3z%22%2F%3E%3C%2Fsvg%3E');
+    /* カスタム矢印 */
+    background-repeat: no-repeat;
+    background-position: right 10px top 50%;
+    background-size: 12px auto;
+}
+
+.payment-select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+
+.change-address-link {
+    font-size: 14px;
+    color: #007bff;
+    text-decoration: underline;
+}
+
+.address-zip,
+.address-detail {
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 5px;
+}
+
+/* 右側の購入情報サイドバー */
+.purchase-sidebar {
+    flex-basis: 40%;
+    /* 右側カラムの幅 */
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.purchase-info-box {
+    border: 1px solid #eee;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.purchase-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    font-size: 16px;
+}
+
+.purchase-info-row:first-child {
+    font-weight: bold;
+    color: #333;
+}
+
+.purchase-info-row .price {
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+}
+
+.purchase-button {
+    display: block;
+    width: 100%;
+    background-color: #FF5555;
+    /* 赤系のボタン色 */
+    color: #fff;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.purchase-button:hover {
+    background-color: #c0003f;
+}

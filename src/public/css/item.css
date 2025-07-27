@@ -1,0 +1,340 @@
+/* item_detail.css */
+
+.item-detail-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.item-detail__title {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 30px;
+}
+
+.item-detail__wrapper {
+    display: flex;
+    gap: 40px;
+    padding-bottom: 30px;
+}
+
+.item-detail__image-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* 画像が上に寄るように調整 */
+}
+
+.item-detail__image-placeholder {
+    width: 400px;
+    height: 400px;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    /* 画像がはみ出さないように */
+    position: relative;
+    border: 1px solid #ccc;
+    /* 枠線を追加 */
+}
+
+.item-detail__image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    /* 画像全体が表示されるように調整 */
+}
+
+.image-text {
+    position: absolute;
+    color: #666;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.item-detail__info-area {
+    flex: 1;
+}
+
+.item-detail__brand {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.item-detail__price {
+    font-size: 32px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.item-detail__price span {
+    font-size: 18px;
+    font-weight: normal;
+    margin-left: 5px;
+}
+
+.item-detail__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.item-detail__action-icons {
+    display: flex;
+    gap: 20px;
+}
+
+.icon-wrapper {
+    display: flex;
+    /* これにより子要素が横並びになる */
+    flex-direction: column;
+    /* ★変更点: 子要素を縦並びにする */
+    align-items: center;
+    /* ★変更点: 子要素を水平方向で中央揃え */
+    gap: 5px;
+    /* ★変更点: アイコンとカウントの間の隙間を調整 */
+    color: #555;
+    font-size: 18px;
+    /* カウントの文字サイズ */
+    text-align: center;
+    /* カウントのテキスト中央寄せ */
+}
+
+/* アイコン画像そのものに対するスタイル */
+.icon-wrapper i {
+    font-size: 24px;
+    /* Font Awesomeアイコンのサイズ (もし使う場合) */
+    display: flex;
+    /* imgタグをFlexアイテムとして扱う */
+    justify-content: center;
+    /* imgをiの中で中央寄せ */
+    align-items: center;
+    /* imgをiの中で中央寄せ */
+    width: 30px;
+    /* アイコンの親要素の幅 */
+    height: 30px;
+    /* アイコンの親要素の高さ */
+}
+
+.icon-wrapper i img {
+    width: 100%;
+    /* 親要素の幅に合わせる */
+    height: 100%;
+    /* 親要素の高さに合わせる */
+    object-fit: contain;
+    /* 画像全体を表示し、必要なら余白を作る */
+    vertical-align: middle;
+    /* 画像とテキストのベースラインを揃える */
+}
+
+/* ボタンのスタイル */
+.btn {
+    display: inline-block;
+    padding: 12px 25px;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border: none;
+    /* デフォルトのボタン枠線を削除 */
+}
+
+.btn--purchase {
+    background-color: #ee5555;
+    /* 赤系の色 */
+    color: #fff;
+    font-size: 18px;
+}
+
+.btn--purchase:hover {
+    background-color: #cc4444;
+}
+
+.btn--comment-submit {
+    background-color: #ee5555;
+    /* 赤系の色 */
+    color: #fff;
+    font-size: 16px;
+    width: 100%;
+    /* 幅を広げる */
+    padding: 15px;
+    /* パディングを増やす */
+    margin-top: 15px;
+}
+
+.btn--comment-submit:hover {
+    background-color: #cc4444;
+}
+
+/* 各セクションの共通スタイル */
+.item-detail__section {
+    margin-bottom: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.item-detail__section:first-of-type {
+    border-top: none;
+    /* 最初のセクションは上線なし */
+    padding-top: 0;
+}
+
+.section__title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.section__content {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #555;
+}
+
+/* 商品情報テーブル */
+.item-detail__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+}
+
+.item-detail__table th,
+.item-detail__table td {
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+    color: #555;
+}
+
+.item-detail__table th {
+    width: 120px;
+    color: #333;
+    font-weight: bold;
+}
+
+.tag {
+    display: inline-block;
+    background-color: #e0e0e0;
+    color: #555;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-right: 8px;
+    font-size: 14px;
+}
+
+/* コメントセクション */
+.comment {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.comment__user-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #ccc;
+    border-radius: 50%;
+    margin-right: 15px;
+    flex-shrink: 0;
+    /* アイコンが縮まないように */
+    overflow: hidden;
+    /* ★追加: はみ出した画像を隠す */
+    display: flex;
+    /* ★追加: imgを中央寄せするためにflexboxを使う */
+    justify-content: center;
+    /* ★追加: 水平方向の中央寄せ */
+    align-items: center;
+    /* ★追加: 垂直方向の中央寄せ */
+}
+
+.comment__user-icon .comment__user-image {
+    width: 100%;
+    /* 親要素の幅に合わせる */
+    height: 100%;
+    /* 親要素の高さに合わせる */
+    object-fit: cover;
+    /* ★追加: 画像を切り抜いてコンテナを埋める */
+    /* object-fit: contain; でも良いが、その場合画像全体が表示されるが余白ができる */
+    border-radius: 50%;
+    /* ★追加: アイコン自体も円形にする */
+}
+
+.comment__body {
+    flex-grow: 1;
+}
+
+.comment__user-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.comment__text {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.5;
+}
+
+.comment-textarea {
+    width: 100%;
+    height: 100px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    resize: vertical;
+    /* 縦方向のみリサイズ可能 */
+    font-size: 16px;
+    box-sizing: border-box;
+    /* パディングとボーダーを幅に含める */
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .item-detail__wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .item-detail__image-placeholder {
+        width: 100%;
+        max-width: 400px;
+        /* 小さい画面でも大きくなりすぎないように */
+        height: auto;
+        /* 高さを自動調整 */
+        padding-top: 100%;
+        /* 1:1のアスペクト比を維持 (幅に対する高さの比率) */
+        position: relative;
+    }
+
+    .item-detail__image-placeholder .item-detail__image,
+    .item-detail__image-placeholder .image-text {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .item-detail__info-area {
+        width: 100%;
+    }
+}
