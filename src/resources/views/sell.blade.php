@@ -22,7 +22,7 @@
                         </label>
                         <div class="image-preview" id="imagePreview"></div>
                         @error('product_image')
-                            <div class="form-error">{{ $message }}</div>
+                            <div class="form__error">{{ $message }}</div>
                         @enderror
                     </div>
                 </section>
@@ -39,7 +39,7 @@
                                 </label>
                             @endforeach
                             @error('category_ids')
-                                <div class="form-error">{{ $message }}</div>
+                                <div class="form__error">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
@@ -52,7 +52,7 @@
                             @endforeach
                         </select>
                         @error('condition')
-                            <div class="form-error">{{ $message }}</div>
+                            <div class="form__error">{{ $message }}</div>
                         @enderror
                     </div>
                 </section>
@@ -63,14 +63,14 @@
                         <label for="productName" class="form-label">商品名</label>
                         <input type="text" id="productName" class="form-input" name="name" value="{{old('name')}}">
                         @error('name')
-                        <div class="form-error">{{ $message }}</div>
+                        <div class="form__error">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group">
                         <label for="brandName" class="form-label">ブランド名</label>
                         <input type="text" id="brandName" class="form-input" name="brand_name" value="{{old('brand_name')}}">
                         @error('brand_name')
-                        <div class="form-error">{{ $message }}</div>
+                        <div class="form__error">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group">
@@ -79,7 +79,7 @@
                             {{ old('detail') }}
                         </textarea>
                         @error('detail')
-                        <div class="form-error">{{ $message }}</div>
+                        <div class="form__error">{{ $message }}</div>
                         @enderror
                     </div>
                 </section>
@@ -90,7 +90,7 @@
                         <span class="price-currency">¥</span>
                         <input type="number" id="sellingPrice" class="form-input price-input" name="price" placeholder="0" value="{{old('price')}}">
                         @error('price')
-                        <div class="form-error">{{ $message }}</div>
+                        <div class="form__error">{{ $message }}</div>
                         @enderror
                     </div>
                 </section>

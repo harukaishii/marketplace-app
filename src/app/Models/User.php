@@ -106,6 +106,15 @@ class User extends Authenticatable
         return $this->hasMany(Favorite::class, 'user_id');
     }
 
+    public function isFavorited(Item $item)
+    {
+        return $this->favorites()->where('item_id',$item->id)->exists();
+
+    }
+
+
+
+
     public function address(){
         return $this->hasOne(UserAddress::class,'user_id');
     }

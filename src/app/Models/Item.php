@@ -88,6 +88,11 @@ class Item extends Model
         return $this->hasMany(Favorite::class,'item_id');
     }
 
+    public function favoritedUsers()
+    {
+        return $this->belongsToMany(User::class,'favorites');
+    }
+
     public function purchase()
     {
         return $this->hasOne(PurchaseHistory::class, 'item_id');

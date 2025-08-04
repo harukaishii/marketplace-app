@@ -38,6 +38,9 @@ class PurchaseHistory extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
+        'item_id',
+        'user_address_id',
         'payment_type',
     ];
 

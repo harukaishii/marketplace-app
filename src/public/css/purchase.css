@@ -7,33 +7,22 @@ ul {
     list-style: none;
 }
 
-img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-}
-
 .main {
     padding: 30px 0;
 }
 
 .container.purchase-container {
     max-width: 960px;
-    /* 全体の幅を調整 */
     margin: 0 auto;
     padding: 0 20px;
     display: flex;
-    /* Flexboxで左右のカラムを配置 */
     gap: 30px;
-    /* カラム間の隙間 */
     align-items: flex-start;
-    /* 上揃え */
 }
 
 /* 左側の購入詳細セクション */
 .purchase-details-wrapper {
     flex-basis: 60%;
-    /* 左側カラムの幅 */
     background-color: #fff;
     padding: 30px;
     border-radius: 8px;

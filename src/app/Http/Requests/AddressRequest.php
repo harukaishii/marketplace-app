@@ -13,7 +13,7 @@ class AddressRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,24 @@ class AddressRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'post' => 'required|regex:/^\d{3}-\d{4}$/|max:8',
+            'address' => 'required',
+            'building' => 'nullable',
+        ];
+
+        if (!$this->routeIs('purchase.updateAddress')) {
+            $rules['name'] = 'required';
+        }
+    }
+
+    public function messages()
+    {
+        return [
+            'name.required' =>'お名前を入力してください',
+            'post.required' => '郵便番号を入力してください',
+            'post.max'=> '郵便番号は8文字以内で入力してください',
+            'post.regex' => '郵便番号はハイフンありの「123-4567」の形式で入力してください',
+            'address.required' => '住所を入力してください',
         ];
     }
 }

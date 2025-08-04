@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\FavoriteController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,14 +15,21 @@ use App\Http\Controllers\PurchaseController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+//一覧と詳細は未ログインで参照可
 Route::get('/', [ItemController::class,'index'])->name('index');
 Route::get('/item/{item_id}',[ItemController::class,'show'])->name('item.show');
+
+//検索
+Route::get('/search', [App\Http\Controllers\ItemController::class, 'search'])->name('item.search');
+
 
 Route::middleware(['auth'])->group(function(){
 
     //コメント
     Route::post('/item/{itemId}/comment', [ItemController::class, 'storeComment'])->name('item.comment.store');
+
+    //いいね
+    Route::post('/items/{item}/favorite', [FavoriteController::class, 'toggle'])->name('item.favorite.toggle');
 
     //プロフィール関連
     Route::get('/mypage/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -33,8 +41,13 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/sell', [ItemController::class, 'store'])->name('sell.store');
 
     //購入
-    Route::get('/purchase/{item_id}', [PurchaseController::class, 'purchase'])->name('item.purchase');
-    Route::get('/purchase/address/{item_id}', [PurchaseController::class, 'address'])->name('address.change');
+    Route::get('/purchase/{item}', [PurchaseController::class, 'showPurchaseForm'])->name('purchase.showPurchaseForm');
+    Route::post('/purchase/{item}', [PurchaseController::class, 'store'])->name('purchase.store');
+
+    //住所関連
+    Route::get('/purchase/address/{item}', [PurchaseController::class, 'editAddress'])->name('purchase.editAddress');
+    Route::post('/purchase/address/update', [PurchaseController::class, 'updateAddress'])->name('purchase.updateAddress');
+
 
     //ログアウト
     Route::post('/logout', [\Laravel\Fortify\Http\Controllers\AuthenticatedSessionController::class, 'destroy'])->name('logout');

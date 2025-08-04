@@ -13,7 +13,7 @@ class ProfileRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,15 @@ class ProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'image_file' => 'required|mimes:jpeg,png'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'image_file.required' => '画像ファイルを選択してください',
+            'image_file.mimes' => '画像は.jpegまたは.png形式で指定してください',
         ];
     }
 }

@@ -31,19 +31,18 @@ class Favorite extends Model
 {
     use HasFactory;
 
-    public function items()
+    protected $fillable =[
+        'user_id',
+        'item_id',
+    ];
+
+    public function item()
     {
-        return $this->belongsToMany(
-            Item::class,
-            'item_id',
-        );
+        return $this->belongsTo(Item::class);
     }
 
-    public function users()
+    public function user()
     {
-        return $this->belongsToMany(
-            User::class,
-            'user_id',
-        );
+        return $this->belongsTo(User::class);
     }
 }

@@ -8,7 +8,9 @@ use App\Models\Item;
 use App\Models\Category;
 use App\Models\Comment;
 use App\Models\User;
+use App\Models\Favorite;
 use App\Http\Requests\ExhibitionRequest;
+use App\Http\Requests\CommentRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,19 +21,70 @@ class ItemController extends Controller
         $this->middleware('auth')->except(['index', 'show']);
     }
 
-    public function index()
+    //一覧表示
+    public function index(Request $request)
     {
-        $items = Item::all();
-        return view('index', compact('items'));
+        $page = $request->input('page');
+        $keyword = $request->input('keyword');
+
+        // デフォルトはすべての商品（出品者自身の商品を除く）
+        $query = Item::query();
+
+        // ログインしている場合は、自分の出品した商品を除外
+        if (Auth::check()) {
+            $query->where('listed_by', '!=', Auth::id());
+        }
+
+        // マイリスト表示の場合
+        if ($page === 'mylist') {
+            if (!Auth::check()) {
+                $items = collect(); // 未ログインの場合は空のコレクション
+            } else {
+                $likedItemIds = Auth::user()->favorites()->pluck('item_id');
+                // マイリストの場合も、自分の出品した商品を除外する
+                $query->whereIn('id', $likedItemIds)
+                    ->where('listed_by', '!=', Auth::id());
+            }
+        }
+
+        // 検索条件があれば追加
+        if (!empty($keyword)) {
+            $query->where('name', 'like', '%' . $keyword . '%');
+        }
+
+        // 最終的なアイテムを取得
+        $items = isset($query) ? $query->latest()->get() : collect();
+
+        return view('index', compact('items', 'keyword'));
     }
 
+    //検索
+    public function search(Request $request)
+    {
+        $keyword = $request->input('keyword');
+
+        $items = Item::query()
+            ->when($keyword, function ($query, $keyword) {
+                $query->where('name', 'like', '%' . $keyword . '%');
+            })
+            // 検索結果でも自身の出品した商品を除外する
+            ->when(Auth::check(), function ($query) {
+                $query->where('listed_by', '!=', Auth::id());
+            })
+            ->get();
+
+        return view('index', compact('items', 'keyword'));
+    }
+
+    //詳細表示
     public function show($item_id)
     {
         $item = Item::with(['categories', 'comments.user'])->findOrFail($item_id);
         return view('item', compact('item'));
     }
 
-    public function storeComment(Request $request, $itemId)
+    //コメント
+    public function storeComment(CommentRequest $request, $itemId)
     {
         Comment::create([
             'item_id' => $itemId,
@@ -42,7 +95,7 @@ class ItemController extends Controller
         return redirect()->back()->with('success', 'コメントを送信しました。');
     }
 
-
+    //出品画面
     public function create()
     {
         $categories = Category::all();
@@ -50,6 +103,7 @@ class ItemController extends Controller
         return view('sell', compact('categories', 'conditions'));
     }
 
+    //出品
     public function store(ExhibitionRequest $request)
     {
         $validatedData = $request->validated();

@@ -13,11 +13,6 @@ ul {
     list-style: none;
 }
 
-img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-}
 
 .main {
     padding: 30px 0;
@@ -66,10 +61,8 @@ img {
     color: #333;
     position: relative;
     padding-left: 15px;
-    /* マーカーのためのスペース */
 }
 
-/* フォームセクションタイトルの左側のマーカー */
 .form-section__title::before {
     content: "";
     position: absolute;
@@ -104,7 +97,6 @@ img {
     border-radius: 5px;
     font-size: 16px;
     appearance: none;
-    /* selectのデフォルトスタイルをリセット */
     -webkit-appearance: none;
     -moz-appearance: none;
 }
@@ -119,18 +111,14 @@ img {
 
 .form-textarea {
     min-height: 120px;
-    /* テキストエリアの最低高さを設定 */
     resize: vertical;
-    /* 垂直方向のみリサイズ可能 */
 }
 
 /* 画像アップロードエリア */
 .image-upload-area {
     width: 100%;
     height: 200px;
-    /* 画像アップロードエリアの高さ */
     border: 1px dashed #ccc;
-    /* 点線ボーダー */
     background-color: #f8f8f8;
     display: flex;
     flex-direction: column;
@@ -181,9 +169,7 @@ img {
 .category-tags {
     display: flex;
     flex-wrap: wrap;
-    /* 折り返し */
     gap: 10px;
-    /* ボタン間のスペース */
 }
 /* チェックボックス本体を隠す */
 .category-checkbox-input {
@@ -193,7 +179,6 @@ img {
 /* ラベル内のspan（ボタンの見た目部分）の基本スタイル */
 .category-tag-checkbox {
     display: inline-block;
-    /* インライン要素をブロックのように扱い、paddingやmarginを適用 */
     padding: 8px 15px;
     margin: 5px;
     border: 1px solid #FF5555;
@@ -203,7 +188,6 @@ img {
     background-color: #fff;
     transition: all 0.2s ease-in-out;
     user-select: none;
-    /* テキスト選択を無効化 */
 }
 
 /* チェックされた時のスタイル */
@@ -230,7 +214,6 @@ img {
 
 .price-input {
     flex-grow: 1;
-    /* 残りのスペースを埋める */
 }
 
 /* 出品ボタン */
@@ -238,7 +221,6 @@ img {
     display: block;
     width: 100%;
     background-color: #FF5555;
-    /* 赤系の色 */
     color: #fff;
     padding: 15px 20px;
     border: none;
@@ -252,4 +234,10 @@ img {
 
 .submit-button:hover {
     background-color: #FF5555;
+}
+
+.form__error {
+    height: 20px;
+    color: #ff0000;
+    text-align: left;
 }

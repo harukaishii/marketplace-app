@@ -13,37 +13,35 @@
             <ul class="main-nav__list">
                 <li class="main-nav__item"><a href="#" class="main-nav__link">おすすめ</a></li>
                 <li class="main-nav__item">
-                    <a href="{{ route('index', ['page' => 'mylist', 'listed_by' => Auth::id()]) }}"
-                       class="main-nav__link {{ request('page') == 'mylist' ? 'main-nav__link--active' : '' }}">
-                        マイリスト
-                    </a>
+                    <a href="{{ route('index', ['page' => 'mylist', 'keyword' => request('keyword')]) }}">マイリスト</a>
                 </li>
             </ul>
         </nav>
 
         <div class="product-list">
-            @foreach ($items as $item)
-                @if(Auth::check() && $item->listed_by === Auth::id())
-                    @continue
+            @forelse ($items as $item)
+                <a href="{{ route('item.show', ['item_id' => $item->id]) }}" class="product-item-link">
+                    <div class="product-item">
+                        <div class="product-item__image-wrapper">
+                            <img src="{{ asset('storage/' . $item->image)}}" alt="{{$item->name}}の商品画像" class="product-item__image">
+                        </div>
+                        <div class="product-info-container">
+                            <p class="product-item__name">{{ $item->name }}</p>
+                            @if ($item->status === \App\Enums\ItemStatus::SOLD)
+                                <span class="product-item__status--sold">sold</span>
+                            @endif
+                        </div>
+                    </div>
+                </a>
+            @empty
+                @if (request('page') === 'mylist' && !Auth::check())
+                    <p>マイリストを表示するにはログインしてください</p>
+                @elseif (request('page') === 'mylist')
+                    <p>マイリストに商品がありません</p>
+                @else
+                    <p>現在、表示できる商品がありません</p>
                 @endif
-
-            <a href="{{ route('item.show', ['item_id' => $item->id]) }}" class="product-item-link">
-                <div class="product-item">
-                    <div class="product-item__image-wrapper">
-                        <img src="{{ asset('storage/' . $item->image)}}" alt="{{$item->name}}の商品画像" class="product-item__image">
-                    </div>
-                    <div class="product-info-container">
-                        <p class="product-item__name">
-                            {{ $item->name }}
-                        </p>
-                        @if ($item->status === \App\Enums\ItemStatus::SOLD)
-                            <span class="product-item__status--sold">sold</span>
-                        @endif
-                    </div>
-                </div>
-            </a>
-
-            @endforeach
+            @endforelse
         </div>
     </div>
 </main>

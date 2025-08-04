@@ -21,7 +21,7 @@ class UsersTableSeeder extends Seeder
 
         $userImages = [];
          for ($j = 1; $j <= 10; $j++) {
-             $userImages[] = "person_{$j}.jpg";
+             $userImages[] = "person_{$j}.jpeg";
          }
 
         for ($i = 0; $i < 10; $i++) {

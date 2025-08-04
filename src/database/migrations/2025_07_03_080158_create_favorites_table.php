@@ -19,11 +19,10 @@ class CreateFavoritesTable extends Migration
             $table->unsignedBigInteger('item_id')->nullable(false);
             $table->timestamps();
 
-            // 外部キー制約
             $table->foreign('item_id')->references('id')->on('items');
-            // itemsテーブルのidを参照
             $table->foreign('user_id')->references('id')->on('users');
-            // app_usersテーブルのidを参照
+
+            $table->unique(['user_id', 'item_id']);
         });
     }
 

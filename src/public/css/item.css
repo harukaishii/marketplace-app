@@ -29,7 +29,6 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    /* 画像が上に寄るように調整 */
 }
 
 .item-detail__image-placeholder {
@@ -40,17 +39,14 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    /* 画像がはみ出さないように */
     position: relative;
     border: 1px solid #ccc;
-    /* 枠線を追加 */
 }
 
 .item-detail__image {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
-    /* 画像全体が表示されるように調整 */
 }
 
 .image-text {
@@ -97,46 +93,45 @@
 
 .icon-wrapper {
     display: flex;
-    /* これにより子要素が横並びになる */
     flex-direction: column;
-    /* ★変更点: 子要素を縦並びにする */
     align-items: center;
-    /* ★変更点: 子要素を水平方向で中央揃え */
     gap: 5px;
-    /* ★変更点: アイコンとカウントの間の隙間を調整 */
     color: #555;
     font-size: 18px;
-    /* カウントの文字サイズ */
     text-align: center;
-    /* カウントのテキスト中央寄せ */
 }
 
-/* アイコン画像そのものに対するスタイル */
 .icon-wrapper i {
     font-size: 24px;
-    /* Font Awesomeアイコンのサイズ (もし使う場合) */
     display: flex;
-    /* imgタグをFlexアイテムとして扱う */
     justify-content: center;
-    /* imgをiの中で中央寄せ */
     align-items: center;
-    /* imgをiの中で中央寄せ */
     width: 30px;
-    /* アイコンの親要素の幅 */
     height: 30px;
-    /* アイコンの親要素の高さ */
 }
 
 .icon-wrapper i img {
     width: 100%;
-    /* 親要素の幅に合わせる */
     height: 100%;
-    /* 親要素の高さに合わせる */
     object-fit: contain;
-    /* 画像全体を表示し、必要なら余白を作る */
     vertical-align: middle;
-    /* 画像とテキストのベースラインを揃える */
 }
+
+.favorite-icon {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.favorite-icon i.fa-star {
+    font-size: 24px;
+}
+
+.favorite-icon i.fas.fa-star {
+    color: #FFD700;
+}
+
 
 /* ボタンのスタイル */
 .btn {
@@ -149,7 +144,6 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
     border: none;
-    /* デフォルトのボタン枠線を削除 */
 }
 
 .btn--purchase {
@@ -165,13 +159,10 @@
 
 .btn--comment-submit {
     background-color: #ee5555;
-    /* 赤系の色 */
     color: #fff;
     font-size: 16px;
     width: 100%;
-    /* 幅を広げる */
     padding: 15px;
-    /* パディングを増やす */
     margin-top: 15px;
 }
 
@@ -254,27 +245,17 @@
     border-radius: 50%;
     margin-right: 15px;
     flex-shrink: 0;
-    /* アイコンが縮まないように */
     overflow: hidden;
-    /* ★追加: はみ出した画像を隠す */
     display: flex;
-    /* ★追加: imgを中央寄せするためにflexboxを使う */
     justify-content: center;
-    /* ★追加: 水平方向の中央寄せ */
     align-items: center;
-    /* ★追加: 垂直方向の中央寄せ */
 }
 
 .comment__user-icon .comment__user-image {
     width: 100%;
-    /* 親要素の幅に合わせる */
     height: 100%;
-    /* 親要素の高さに合わせる */
     object-fit: cover;
-    /* ★追加: 画像を切り抜いてコンテナを埋める */
-    /* object-fit: contain; でも良いが、その場合画像全体が表示されるが余白ができる */
     border-radius: 50%;
-    /* ★追加: アイコン自体も円形にする */
 }
 
 .comment__body {
@@ -300,10 +281,8 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     resize: vertical;
-    /* 縦方向のみリサイズ可能 */
     font-size: 16px;
     box-sizing: border-box;
-    /* パディングとボーダーを幅に含める */
 }
 
 /* レスポンシブ対応 */
@@ -312,29 +291,50 @@
         flex-direction: column;
         align-items: center;
     }
+    .item-detail__image-area {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+        }
+
 
     .item-detail__image-placeholder {
         width: 100%;
         max-width: 400px;
-        /* 小さい画面でも大きくなりすぎないように */
         height: auto;
-        /* 高さを自動調整 */
-        padding-top: 100%;
-        /* 1:1のアスペクト比を維持 (幅に対する高さの比率) */
         position: relative;
+        min-height: 250px;
     }
 
     .item-detail__image-placeholder .item-detail__image,
     .item-detail__image-placeholder .image-text {
-        position: absolute;
+        position: static;
         top: 0;
         left: 0;
         width: 100%;
-        height: 100%;
+        height: auto;
         object-fit: contain;
     }
 
     .item-detail__info-area {
         width: 100%;
     }
+}
+
+.product-item__status--sold {
+    background-color: #e74c3c;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+    margin-left: 8px;
+}
+
+.error-message {
+    height: 20px;
+    color: #ff0000;
+    text-align: left;
 }

@@ -18,36 +18,29 @@
         </div>
     @endif
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    {{-- formタグに enctype="multipart/form-data" を追加 --}}
-    <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data" novalidate >
         @csrf
 
-        <div class="profile-image__container">
-    <div class="profile-image__wrapper">
-        @if (empty($user->image))
-            <div class="profile-image__placeholder"></div>
-        @else
-            <img src="{{ Storage::url($user->image) }}" alt="Current Profile Image" class="profile-image__actual">
-        @endif
-    </div>
+    <div class="profile-image__container">
+        <div class="profile-image__wrapper">
+            @if (empty($user->image))
+                <div class="profile-image__placeholder"></div>
+            @else
+                <img src="{{ Storage::url($user->image) }}" alt="Current Profile Image" class="profile-image__actual">
+            @endif
+        </div>
 
-    <div class="profile-image__input-group">
-        <label for="image_file" class="custom-file-upload">
-            画像を選択する
-        </label>
-        <input type="file" id="image_file" name="image_file" style="display: none">
+        @error('image_file')
+         <div class="form__error">{{ $message }}</div>
+        @enderror
+
+        <div class="profile-image__input-group">
+            <label for="image_file" class="custom-file-upload">
+                画像を選択する
+            </label>
+            <input type="file" id="image_file" name="image_file" style="display: none">
+        </div>
     </div>
-</div>
 
         <div class="form__group">
             <div class="form___group-title">
@@ -57,11 +50,9 @@
                 <div class="form__input--text">
                     <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $user->name) }}" required>
                 </div>
-                <div class="form__error">
-                    @error('name')
-                    {{message}}
-                    @enderror
-                </div>
+                 @error('name')
+                <div class="form__error">{{ $message }}</div>
+                @enderror
             </div>
         </div>
 
@@ -73,11 +64,9 @@
                 <div class="form__input--text">
                     <input type="text" class="form-control" id="post" name="post" value="{{ old('post', $user->address->post ?? '') }}">
                 </div>
-                <div class="form__error">
-                    @error('post')
-                    {{message}}
-                    @enderror
-                </div>
+                @error('post')
+                <div class="form__error">{{ $message }}</div>
+                @enderror
             </div>
         </div>
 
@@ -89,11 +78,9 @@
                 <div class="form__input--text">
                     <input type="text" class="form-control" id="address" name="address" value="{{ old('address', $user->address->address ?? '') }}">
                 </div>
-                <div class="form__error">
-                    @error('address')
-                    {{message}}
-                    @enderror
-                </div>
+                @error('address')
+                <div class="form__error">{{ $message }}</div>
+                @enderror
             </div>
         </div>
 
@@ -105,11 +92,9 @@
                 <div class="form__input--text">
                     <input type="text" class="form-control" id="building" name="building" value="{{ old('building', $user->address->building ?? '') }}">
                 </div>
-                <div class="form__error">
-                    @error('building')
-                    {{message}}
-                    @enderror
-                </div>
+                @error('building')
+                <div class="form__error">{{ $message }}</div>
+                @enderror
             </div>
         </div>
 
