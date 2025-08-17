@@ -31,6 +31,9 @@
                     <h3 class="form-section__title">商品の詳細</h3>
                     <div class="form-group">
                         <label class="form-label">カテゴリー</label>
+                        @error('category_ids')
+                        <div class="form__error">{{ $message }}</div>
+                        @enderror
                         <div class="category-tags">
                             @foreach($categories as $category)
                                 <label class="category-checkbox-label">
@@ -38,9 +41,6 @@
                                     <span class="category-tag category-tag-checkbox">{{ $category->name }}</span>
                                 </label>
                             @endforeach
-                            @error('category_ids')
-                                <div class="form__error">{{ $message }}</div>
-                            @enderror
                         </div>
                     </div>
                     <div class="form-group">
@@ -87,7 +87,7 @@
                 <section class="form-section">
                     <h3 class="form-section__title">販売価格</h3>
                     <div class="form-group price-input-group">
-                        <span class="price-currency">¥</span>
+                        <label class="price-currency">¥</label>
                         <input type="number" id="sellingPrice" class="form-input price-input" name="price" placeholder="0" value="{{old('price')}}">
                         @error('price')
                         <div class="form__error">{{ $message }}</div>

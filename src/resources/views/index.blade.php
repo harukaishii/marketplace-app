@@ -11,7 +11,7 @@
     <div class="container">
         <nav class="main-nav">
             <ul class="main-nav__list">
-                <li class="main-nav__item"><a href="#" class="main-nav__link">おすすめ</a></li>
+                <li class="main-nav__item"><a href="/" class="main-nav__link">おすすめ</a></li>
                 <li class="main-nav__item">
                     <a href="{{ route('index', ['page' => 'mylist', 'keyword' => request('keyword')]) }}">マイリスト</a>
                 </li>
@@ -19,6 +19,11 @@
         </nav>
 
         <div class="product-list">
+            @if (session('message'))
+            <div class="alert alert-success">
+                {{ session('message') }}
+            </div>
+            @endif
             @forelse ($items as $item)
                 <a href="{{ route('item.show', ['item_id' => $item->id]) }}" class="product-item-link">
                     <div class="product-item">

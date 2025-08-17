@@ -157,6 +157,13 @@
     background-color: #cc4444;
 }
 
+.btn--purchase.btn--disabled {
+    background-color: #aaa;
+    color: #fff;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 .btn--comment-submit {
     background-color: #ee5555;
     color: #fff;

@@ -23,10 +23,11 @@
 
     <div class="profile-image__container">
         <div class="profile-image__wrapper">
-            @if (empty($user->image))
-                <div class="profile-image__placeholder"></div>
+            @if (!empty($user->image))
+                <img src="{{ Storage::url($user->image) }}" alt="現在のプロフィール画像" class="profile-image__actual">
+                <input type="hidden" name="current_image_exists" value="1">
             @else
-                <img src="{{ Storage::url($user->image) }}" alt="Current Profile Image" class="profile-image__actual">
+                <div class="profile-image__placeholder"></div>
             @endif
         </div>
 

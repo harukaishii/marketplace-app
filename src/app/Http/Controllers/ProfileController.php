@@ -47,22 +47,22 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
-        // 1. ProfileRequestのバリデーションルールとメッセージを取得
+        //ProfileRequestのバリデーションルールとメッセージを取得
         $profileRules = (new ProfileRequest)->rules();
         $profileMessages = (new ProfileRequest)->messages();
 
-        // 2. AddressRequestのバリデーションルールとメッセージを取得
+        //AddressRequestのバリデーションルールとメッセージを取得
         $addressRules = (new AddressRequest)->rules();
         $addressMessages = (new AddressRequest)->messages();
 
-        // 3. 全てのバリデーションルールとメッセージを結合
+        //全てのバリデーションルールとメッセージを結合
         $rules = array_merge($profileRules, $addressRules);
         $messages = array_merge($profileMessages, $addressMessages);
 
-        // 4. 全ての入力に対してバリデーションを実行
+        //全ての入力に対してバリデーションを実行
         $validator = Validator::make($request->all(), $rules, $messages);
 
-        // 5. バリデーションに失敗した場合
+        //バリデーションに失敗した場合
         if ($validator->fails()) {
             return redirect()
                 ->back()
@@ -71,13 +71,13 @@ class ProfileController extends Controller
         }
 
 
-        // ユーザーデータの更新
+        //ユーザーデータの更新
         $userData = [
             'name' => $request->name, // AddressRequestでnameをバリデーションしているので、ここから取得
             'profile_completed' => true,
         ];
 
-        // 画像の処理
+        //画像の処理
         if ($request->hasFile('image_file')) {
             // 古い画像がある場合は削除 (publicディスクから削除)
             if ($user->image) {
@@ -85,10 +85,8 @@ class ProfileController extends Controller
             }
             // 新しい画像を保存 (publicディスクの'users'フォルダに保存)
             $imagePath = $request->file('image_file')->store('users', 'public');
-            $userData['image'] = $imagePath; // DBには'users/xxxx.png'のようなパスを保存
+            $userData['image'] = $imagePath;
         } else {
-            // 画像が選択されなかった場合で、かつ既存の画像がある場合は、既存の画像を保持
-            // ProfileRequestが'required'なので、このelseブロックには入らないはずですが念のため
             if ($user->image && !isset($userData['image'])) {
                 $userData['image'] = $user->image;
             }

@@ -22,8 +22,6 @@ class CreateUsersTable extends Migration
             $table->string('image', 255)->nullable();
             $table->boolean('profile_completed')->default(false);
             $table->timestamps();
-
-            $table->unique('email');
         });
     }
 

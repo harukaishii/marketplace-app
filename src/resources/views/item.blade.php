@@ -46,7 +46,11 @@
                             <i class="far fa-comment"></i> {{ $item->comments->count()}}
                         </span>
                     </div>
-                    <a href="{{ route('purchase.showPurchaseForm',['item' => $item->id]) }}" class="btn btn--purchase">購入手続きへ</a>
+                    @if($item->status === \App\Enums\ItemStatus::SOLD)
+                        <button class="btn btn--purchase btn--disabled" disabled>購入手続きへ</button>
+                    @else
+                        <a href="{{ route('purchase.showPurchaseForm',['item' => $item->id]) }}" class="btn btn--purchase">購入手続きへ</a>
+                    @endif
                 </div>
 
                 <div class="item-detail__section">

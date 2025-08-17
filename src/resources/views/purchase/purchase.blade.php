@@ -63,12 +63,15 @@
                     <span id="selected-payment-method">選択されていません</span>
                 </div>
             </div>
-            <form action="{{ route('purchase.store', ['item' => $item->id]) }}" method="post">
+            <form action="{{ route('checkout.create') }}" method="post">
                 @csrf
+                <input type="hidden" name="item_id" value="{{ $item->id }}">
                 <input type="hidden" name="payment_type" id="hidden_payment_type" value="{{ old('payment_type') }}">
+
                 @if (isset($userAddress))
                     <input type="hidden" name="user_address_id" value="{{ $userAddress->id }}">
                 @endif
+
                 <button type="submit" class="purchase-button">購入する</button>
             </form>
         </div>
@@ -84,7 +87,6 @@
         const hiddenPaymentTypeInput = document.getElementById('hidden_payment_type');
 
         if (paymentSelect && selectedPaymentMethodSpan && hiddenPaymentTypeInput) {
-            // **修正点: old('payment_type') の値を優先的に使用して初期値を設定**
             const initialPaymentValue = "{{ old('payment_type') }}"; // Bladeから old() の値を取得
 
             // old() の値があればそれを、なければ現在の paymentSelect.value を使う

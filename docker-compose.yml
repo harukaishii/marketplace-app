@@ -10,11 +10,15 @@ services:
             - ./src:/var/www/
         depends_on:
             - php
+        networks:
+            - my-network 
 
     php:
         build: ./docker/php
         volumes:
             - ./src:/var/www/
+        networks:
+            - my-network 
 
     mysql:
         image: mysql:8.0.26
@@ -28,6 +32,8 @@ services:
         volumes:
             - ./docker/mysql/data:/var/lib/mysql
             - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+        networks:
+            - my-network 
 
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
@@ -40,3 +46,17 @@ services:
             - mysql
         ports:
             - 8080:80
+        networks:
+            - my-network 
+
+    mailhog:
+        image: 'mailhog/mailhog:latest'
+        ports:
+            - '1025:1025'
+            - '8025:8025'
+        networks:
+            - my-network 
+
+networks:
+  my-network:
+    driver: bridge

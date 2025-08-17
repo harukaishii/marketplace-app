@@ -5,6 +5,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\CheckoutController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,7 +16,7 @@ use App\Http\Controllers\FavoriteController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-//一覧と詳細は未ログインで参照可
+//一覧と詳細は未ログインで参照可、検索も動く
 Route::get('/', [ItemController::class,'index'])->name('index');
 Route::get('/item/{item_id}',[ItemController::class,'show'])->name('item.show');
 
@@ -23,7 +24,13 @@ Route::get('/item/{item_id}',[ItemController::class,'show'])->name('item.show');
 Route::get('/search', [App\Http\Controllers\ItemController::class, 'search'])->name('item.search');
 
 
-Route::middleware(['auth'])->group(function(){
+//ログアウト_認証済みでないとログアウトできなくなるのでverifiedから外す
+Route::middleware('auth')->group(function(){
+    Route::post('/logout', [\Laravel\Fortify\Http\Controllers\AuthenticatedSessionController::class, 'destroy'])->name('logout');
+});
+
+
+Route::middleware(['auth','verified'])->group(function(){
 
     //コメント
     Route::post('/item/{itemId}/comment', [ItemController::class, 'storeComment'])->name('item.comment.store');
@@ -44,12 +51,14 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/purchase/{item}', [PurchaseController::class, 'showPurchaseForm'])->name('purchase.showPurchaseForm');
     Route::post('/purchase/{item}', [PurchaseController::class, 'store'])->name('purchase.store');
 
+    //決済
+    Route::post('/checkout',[CheckoutController::class,'create'])->name('checkout.create');
+    Route::get('/checkout/success',[CheckoutController::class,'success'])->name('checkout.success');
+    Route::get('/checkout/cancel',[CheckoutController::class,'cancel'])->name('checkout.cancel');
+
     //住所関連
     Route::get('/purchase/address/{item}', [PurchaseController::class, 'editAddress'])->name('purchase.editAddress');
     Route::post('/purchase/address/update', [PurchaseController::class, 'updateAddress'])->name('purchase.updateAddress');
 
-
-    //ログアウト
-    Route::post('/logout', [\Laravel\Fortify\Http\Controllers\AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
 

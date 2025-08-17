@@ -34,7 +34,7 @@ class ExhibitionRequest extends FormRequest
             'condition' => 'required|in:' . $conditionValues,
             'category_ids' => 'required|array|min:1',
             'category_ids.*' => 'exists:categories,id',
-            'product_image' => 'required|mimes:jpeg,png',
+            'product_image' => 'required|mimes:jpeg,png|max:2048',
         ];
     }
 
@@ -43,8 +43,9 @@ class ExhibitionRequest extends FormRequest
         return [
             'name.required' => '商品名を入力してください',
             'detail.required' => '商品説明を入力してください',
-            'product_image.required' => '画像を選択してください',
-            'product_image.mimes' => '画像は.jpegまたは.png形式で指定してください',
+            'product_image.required' => '画像ファイルを選択してください',
+            'product_image.mimes' => '画像ファイルは.jpegまたは.png形式で指定してください',
+            'product_image.max' => '画像ファイルのサイズは2MBを超えないでください',
             'category_ids.required' => 'カテゴリーを選択してください',
             'condition.required' => '商品の状態を選択してください',
             'price.required' => '商品価格を入力してください',

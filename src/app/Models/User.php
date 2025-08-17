@@ -54,7 +54,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -111,8 +111,6 @@ class User extends Authenticatable
         return $this->favorites()->where('item_id',$item->id)->exists();
 
     }
-
-
 
 
     public function address(){

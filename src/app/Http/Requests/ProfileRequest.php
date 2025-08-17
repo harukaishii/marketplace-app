@@ -23,16 +23,27 @@ class ProfileRequest extends FormRequest
      */
     public function rules()
     {
+
         return [
-            'image_file' => 'required|mimes:jpeg,png'
+
+            'image_file' => [
+                'sometimes', // リクエストにimage_fileがある場合のみバリデーションを適用
+                'image',
+                'mimes:jpeg,png',
+                'max:2048',
+                // 既存の画像がなく、かつimage_fileが送信されていない場合にrequiredを適用するルール
+                // 'current_image_exists'という隠しフィールド
+                'required_without:current_image_exists',
+            ],
         ];
     }
 
     public function messages()
     {
         return [
-            'image_file.required' => '画像ファイルを選択してください',
-            'image_file.mimes' => '画像は.jpegまたは.png形式で指定してください',
+            'image_file.required_without' => '画像ファイルを選択してください',
+            'image_file.mimes' => '画像ファイルは.jpegまたは.png形式で指定してください',
+            'image_file.max' => '画像ファイルのサイズは2MBを超えないでください',
         ];
     }
 }

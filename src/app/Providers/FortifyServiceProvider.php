@@ -34,6 +34,7 @@ class FortifyServiceProvider extends ServiceProvider
         // ログイン・登録ビューの指定
         Fortify::loginView(fn() => view('auth.login'));
         Fortify::registerView(fn() => view('auth.register'));
+        Fortify::verifyEmailView(fn() =>view('auth.verify-email'));
 
         // ユーザー関連の処理バインド
         Fortify::createUsersUsing(CreateNewUser::class);

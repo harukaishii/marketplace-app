@@ -11,11 +11,9 @@
     <div class="container">
         <div class="user-profile">
             <div class="profile-image__wrapper">
-                {{-- 画像が登録されていない場合のプレースホルダー --}}
                 @if (empty($user->image))
                     <div class="profile-image__placeholder"></div>
                 @else
-                    {{-- 画像が登録されている場合 --}}
                     <img src="{{ Storage::url($user->image) }}" alt="Current Profile Image" class="profile-image__actual">
                 @endif
             </div>

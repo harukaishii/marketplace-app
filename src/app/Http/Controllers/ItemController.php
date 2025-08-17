@@ -38,7 +38,7 @@ class ItemController extends Controller
         // マイリスト表示の場合
         if ($page === 'mylist') {
             if (!Auth::check()) {
-                $items = collect(); // 未ログインの場合は空のコレクション
+                $items = collect(); // 未ログインの場合は空
             } else {
                 $likedItemIds = Auth::user()->favorites()->pluck('item_id');
                 // マイリストの場合も、自分の出品した商品を除外する
