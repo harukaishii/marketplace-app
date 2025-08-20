@@ -53,6 +53,10 @@
     font-size: 18px;
 }
 
+.form__button-submit:hover {
+    background-color: #cc4444;
+}
+
 .login__link {
     margin-top: 20px;
     text-align: center;

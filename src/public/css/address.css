@@ -81,5 +81,12 @@ ul {
 }
 
 .update-button:hover {
-    background-color: #c0003f;
+    background-color: #cc4444;
+}
+
+.back-link{
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    color: #0073CC;
 }

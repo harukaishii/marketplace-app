@@ -5,11 +5,11 @@
 ### Dockerビルド
 1. 必要ディレクトリの作成
 2. DockerDesktopアプリを立ち上げる
-3. docker-compose up -d --build
+3. `docker-compose up -d --build`
 
 ### Laravel環境構築
-1. docker-compose exec php bash
-2. composer install
+1. `docker-compose exec php bash`
+2. `composer install`
 3. .envファイルを作成
     - `.env.example`をコピーして`.env`ファイルを作成
 4. .envファイルに以下の環境変数を追加
@@ -42,17 +42,16 @@
         STRIPE_SECRET=sk_test_***
 
 5. アプリケーションキーの作成
-php artisan key:generate
+　　`php artisan key:generate`
 
 6. データベースのセットアップ
     - マイグレーションの実行
-        php aritsan migrate
+        `php aritsan migrate`
     - シードの実行
-        php artisan db:seed
+        `php artisan db:seed`
 
 7. MailHogの起動
-　　```bash
-    docker-compose up -d mailhog
+　　`docker-compose up -d mailhog`
 
 8. 画面での操作
 ブラウザで `http://localhost` にアクセスしてください

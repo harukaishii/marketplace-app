@@ -36,7 +36,7 @@
             @if (isset($item) && $item)
                 <input type="hidden" name="item_id" value="{{ $item->id }}">
             @endif
-            
+
 
             <div class="form-group">
                 <label for="postalCode" class="form-label">郵便番号</label>
@@ -50,6 +50,7 @@
                 <label for="buildingName" class="form-label">建物名</label>
                 <input type="text" id="buildingName" name="building" class="form-input" value="{{ old('building', $userAddress->building ?? '') }}" autocomplete="address-line3">
             </div>
+            
             <button type="submit" class="update-button">更新する</button>
             @if (isset($item) && $item)
                 <a href="{{ route('purchase.showPurchaseForm', ['item' => $item->id]) }}" class="back-link">購入画面に戻る</a>

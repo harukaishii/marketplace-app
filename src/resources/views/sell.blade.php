@@ -16,14 +16,15 @@
                 <section class="form-section">
                     <h3 class="form-section__title">商品画像</h3>
                     <div class="image-upload-area">
-                        <input type="file" id="productImage" class="image-upload-input" name="product_image" accept="image/*">
-                        <label for="productImage" class="image-upload-label">
-                            画像を選択する
-                        </label>
-                        <div class="image-preview" id="imagePreview"></div>
-                        @error('product_image')
-                            <div class="form__error">{{ $message }}</div>
-                        @enderror
+                        <div class="image-preview-container">
+                            <input type="file" id="productImage" class="image-upload-input" name="product_image" accept="image/*">
+                            <label for="productImage" class="image-upload-label">
+                            画像を選択する</label>
+                            <div class="image-preview" id="imagePreview"></div>
+                            @error('product_image')
+                                <div class="form__error">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
                 </section>
 
@@ -89,10 +90,10 @@
                     <div class="form-group price-input-group">
                         <label class="price-currency">¥</label>
                         <input type="number" id="sellingPrice" class="form-input price-input" name="price" placeholder="0" value="{{old('price')}}">
-                        @error('price')
-                        <div class="form__error">{{ $message }}</div>
-                        @enderror
                     </div>
+                    @error('price')
+                        <div class="form__error">{{ $message }}</div>
+                    @enderror
                 </section>
 
                 <button type="submit" class="submit-button">出品する</button>

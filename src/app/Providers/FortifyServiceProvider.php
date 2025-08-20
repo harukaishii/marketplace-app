@@ -18,6 +18,9 @@ use App\Http\Responses\LoginResponse as CustomLoginResponse;
 use App\Http\Responses\LogoutResponse as CustomLogoutResponse;
 use Laravel\Fortify\Contracts\RegisterResponse as RegisterResponseContract;
 use App\Http\Responses\RegisterResponse as CustomRegisterResponse;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -35,6 +38,11 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::loginView(fn() => view('auth.login'));
         Fortify::registerView(fn() => view('auth.register'));
         Fortify::verifyEmailView(fn() =>view('auth.verify-email'));
+
+        // ログイン試行のレートリミッターを設定
+        RateLimiter::for('login', function (Request $request) {
+            return Limit::perMinute(5)->by($request->email . $request->ip());
+        });
 
         // ユーザー関連の処理バインド
         Fortify::createUsersUsing(CreateNewUser::class);

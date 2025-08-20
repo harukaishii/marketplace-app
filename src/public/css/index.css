@@ -47,11 +47,11 @@
 }
 
 .main-nav__link:hover {
-    color: #FF0000;
+    color: #FF5555;;
 }
 
 .main-nav__link--active {
-    color: #FF0000;
+    color: #FF5555;;
 }
 
 .product-item-link {

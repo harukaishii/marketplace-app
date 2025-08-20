@@ -19,7 +19,7 @@ class UserAddressesTableSeeder extends Seeder
     {
         $faker = Faker::create('ja_JP');
 
-    
+
         $users = User::all();
 
         if ($users->isEmpty()) {
@@ -65,7 +65,7 @@ class UserAddressesTableSeeder extends Seeder
         $users->each(function ($user) use ($faker, $japaneseBuildingPrefixes, $buildingTypes) {
             UserAddress::create([
                 'user_id' => $user->id,
-                'post' => $faker->postcode(),
+                'post' => $faker->bothify('###-####'),
                 'address' => $faker->address(),
                 'building' => $faker->randomElement($japaneseBuildingPrefixes) . $faker->randomElement($buildingTypes) . $faker->randomNumber(3, true) . '号室',
             ]);

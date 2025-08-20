@@ -51,15 +51,15 @@
     display: inline-block;
     padding: 8px 15px;
     background-color: white;
-    color: #e74c3c;
-    border: 1px solid #e74c3c;
+    color: #FF5555;
+    border: 1px solid #FF5555;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
 }
 
 .custom-file-upload:hover {
-    background-color: #f8d7da;
+background-color: #FF5555;
 }
 
 #file_name_display {
@@ -106,4 +106,21 @@
     color: #FFF;
     cursor: pointer;
     font-size: 18px;
+}
+.form__button-submit:hover{
+    background-color:#cc4444;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
 }

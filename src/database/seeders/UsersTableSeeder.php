@@ -15,28 +15,36 @@ class UsersTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run():void
+    public function run(): void
     {
-        $faker =  Faker::create('ja_JP');
+        // テストユーザーを1人作成
+        User::create([
+            'name' => 'テスト太郎',
+            'email' => 'test@example.com',
+            'password' => Hash::make('password'),
+            'email_verified_at' => now(),
+            'profile_completed' => '1',
+            'image' => 'images/users/person_1.jpeg',
+        ]);
+
+        // Fakerを使ってランダムなユーザーを9人作成
+        $faker = Faker::create('ja_JP');
 
         $userImages = [];
-         for ($j = 1; $j <= 10; $j++) {
-             $userImages[] = "person_{$j}.jpeg";
-         }
-
-        for ($i = 0; $i < 10; $i++) {
-            $randomUserImage = $userImages[array_rand($userImages)];
+        for ($j = 2; $j <= 10; $j++) {
+            $userImages[] = "person_{$j}.jpeg";
         }
 
-        for ($i = 0; $i < 10; $i++) {
+        // 9回ループ
+        for ($i = 0; $i < 9; $i++) {
+            $randomUserImage = $userImages[array_rand($userImages)];
             User::create([
                 'name' => $faker->name,
                 'email' => $faker->unique()->safeEmail,
                 'password' => Hash::make('password'),
                 'email_verified_at' => $faker->boolean(80) ? now() : null,
-                'image' => 'images/users/'. $randomUserImage,
+                'image' => 'images/users/' . $randomUserImage,
             ]);
         }
     }
-
 }

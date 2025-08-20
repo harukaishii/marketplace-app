@@ -18,12 +18,13 @@
             </ul>
         </nav>
 
-        <div class="product-list">
-            @if (session('message'))
+        @if (session('message'))
             <div class="alert alert-success">
                 {{ session('message') }}
             </div>
-            @endif
+        @endif
+
+        <div class="product-list">
             @forelse ($items as $item)
                 <a href="{{ route('item.show', ['item_id' => $item->id]) }}" class="product-item-link">
                     <div class="product-item">
