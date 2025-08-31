@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Models\UserAddress;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
-use Illuminate\Support\Facades\DB; // DBファサードは直接使わないので不要ですが、残していても問題ありません
 
 class UserAddressesTableSeeder extends Seeder
 {

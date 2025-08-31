@@ -3,11 +3,11 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB; // DBファサードをインポート
+use Illuminate\Support\Facades\DB;
 use App\Enums\PaymentType;
 use App\Models\Item;
 use App\Models\User;
-use App\Models\UserAddress; // UserAddressモデルをインポート
+use App\Models\UserAddress; 
 use App\Models\PurchaseHistory;
 
 class PurchaseHistoriesTableSeeder extends Seeder
