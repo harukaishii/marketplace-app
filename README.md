@@ -61,7 +61,13 @@ php artisan migrate
 php artisan db:seed
 ```
 
-### ストレージディレクトリのパーミッション設定（必要に応じて）
+### ストレージのシンボリックリンク作成（重要！）
+**画像を表示するために必須の手順です。必ず実行してください。**
+```bash
+php artisan storage:link
+```
+
+### パーミッション設定（必要に応じて）
 ```bash
 chmod -R 775 storage bootstrap/cache
 ```
