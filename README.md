@@ -44,16 +44,32 @@
 5. アプリケーションキーの作成
 　　`php artisan key:generate`
 
-6. データベースのセットアップ
-    - マイグレーションの実行
-        `php aritsan migrate`
-    - シードの実行
-        `php artisan db:seed`
+6. トレージのシンボリックリンク作成
+**画像を表示するために必須の手順です**
+```bash
+php artisan storage:link
+```
 
-7. MailHogの起動
+7. データベースのセットアップ
+### マイグレーションの実行
+```bash
+php artisan migrate
+```
+
+### シードの実行
+```bash
+php artisan db:seed
+```
+
+### ストレージディレクトリのパーミッション設定（必要に応じて）
+```bash
+chmod -R 775 storage bootstrap/cache
+```
+
+8. MailHogの起動
 　　`docker-compose up -d mailhog`
 
-8. 画面での操作
+9. 画面での操作
 ブラウザで `http://localhost` にアクセスしてください
 
 ## 使用技術（実行環境）
@@ -85,3 +101,5 @@
     | カード番号 | 有効期限 | CVC |
     | :--- | :--- | :--- |
     | `4242 4242 4242 4242` | 任意の将来の日付 | `123` |
+
+```

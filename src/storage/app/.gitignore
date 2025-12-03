@@ -1,3 +1,13 @@
-*
-!public/
-!.gitignore
+# 既存の設定はそのままで、以下を確認・追加
+
+/storage/*.key
+/storage/framework/
+/storage/logs/
+/storage/app/*
+!/storage/app/.gitignore
+!/storage/app/public/
+
+# シーダー用サンプル画像は追跡対象に含める
+!/database/seeders/
+!/database/seeders/sample_images/
+!/database/seeders/sample_images/*
