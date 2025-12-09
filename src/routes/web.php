@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\TransactionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -59,6 +60,26 @@ Route::middleware(['auth','verified'])->group(function(){
     //住所関連
     Route::get('/purchase/address/{item}', [PurchaseController::class, 'editAddress'])->name('purchase.editAddress');
     Route::post('/purchase/address/update', [PurchaseController::class, 'updateAddress'])->name('purchase.updateAddress');
+
+    // 取引チャット画面
+    Route::get('/transactions/{item}', [TransactionController::class, 'show'])
+        ->name('transactions.show');
+
+    // メッセージ投稿
+    Route::post('/transactions/{item}/messages', [TransactionController::class, 'storeMessage'])
+        ->name('transactions.messages.store');
+
+    // メッセージ編集
+    Route::put('/transactions/messages/{message}', [TransactionController::class, 'updateMessage'])
+        ->name('transactions.messages.update');
+
+    // メッセージ削除
+    Route::delete('/transactions/messages/{message}', [TransactionController::class, 'destroyMessage'])
+        ->name('transactions.messages.destroy');
+
+    // 取引完了・評価
+    Route::post('/transactions/{item}/complete', [TransactionController::class, 'complete'])
+        ->name('transactions.complete');
 
 });
 

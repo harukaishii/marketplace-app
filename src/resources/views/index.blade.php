@@ -18,8 +18,23 @@
             </ul>
         </nav>
 
+        {{-- 成功メッセージ --}}
+        @if (session('success'))
+            <div class="alert alert-success" id="successMessage">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        {{-- エラーメッセージ --}}
+        @if (session('error'))
+            <div class="alert alert-error" id="errorMessage">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        {{-- 通常のメッセージ（既存のもの） --}}
         @if (session('message'))
-            <div class="alert alert-success">
+            <div class="alert alert-success" id="message">
                 {{ session('message') }}
             </div>
         @endif
@@ -52,5 +67,27 @@
     </div>
 </main>
 
+{{-- メッセージを自動的に消すスクリプト --}}
+@if (session('success') || session('error') || session('message'))
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // すべてのアラートメッセージを取得
+    const alerts = document.querySelectorAll('.alert');
+
+    alerts.forEach(alert => {
+        // 3秒後にフェードアウト開始
+        setTimeout(() => {
+            alert.style.transition = 'opacity 0.5s';
+            alert.style.opacity = '0';
+
+            // フェードアウト完了後に要素を削除
+            setTimeout(() => {
+                alert.remove();
+            }, 500);
+        }, 3000);
+    });
+});
+</script>
+@endif
 
 @endsection

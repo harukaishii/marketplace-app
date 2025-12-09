@@ -61,7 +61,7 @@ class CheckoutController extends Controller
         }
     }
 
-    // 決済成功後の処理を直接記述
+    // 決済成功後の処理
     public function success(Request $request)
     {
         $stripe = new StripeClient(config('services.stripe.secret'));
@@ -84,9 +84,9 @@ class CheckoutController extends Controller
                 DB::beginTransaction();
 
                 try {
-                    // 商品のステータスを更新
+                    // 商品のステータスを取引中に更新
                     $item = Item::findOrFail($itemId);
-                    $item->status = ItemStatus::SOLD;
+                    $item->status = ItemStatus::IN_TRANSACTION;
                     $item->save();
 
                     // ユーザーの住所情報を取得
@@ -102,7 +102,7 @@ class CheckoutController extends Controller
 
                     DB::commit();
 
-                    return view('checkout.success')->with('success', '商品を購入しました！');
+                    return view('checkout.success')->with('success', '商品を購入しました！取引画面でメッセージをやり取りしてください。');
                 } catch (Exception $e) {
                     DB::rollBack();
                     // エラーログの記録

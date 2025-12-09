@@ -11,6 +11,7 @@ use App\Models\UserAddress;
 use App\Http\Requests\AddressRequest;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\ProfileRequest;
+use App\Enums\ItemStatus;
 
 class ProfileController extends Controller
 {
@@ -23,15 +24,30 @@ class ProfileController extends Controller
 
         $page = $request->query('page', 'sell');
 
+        // 未読メッセージの総数を取得（全タブで表示するため）
+        $totalUnreadCount = $user->getTotalUnreadCount();
+
         $items = collect();
 
         if ($page === 'buy') {
-            $items = $user->purchasedItems;
+            // 購入した商品（売却済みのみ）
+            $items = $user->purchasedItems()
+                ->where('status', ItemStatus::SOLD->value)
+                ->orderBy('created_at', 'desc')
+                ->get();
+        } elseif ($page === 'transaction') {
+            // 取引中の商品（購入 + 出品）
+            // 最新メッセージ順に自動ソート済み
+            $items = $user->getTransactionItems();
         } else {
-            $items = $user->listedItems;
+            // 出品した商品（販売中 + 売却済み）
+            $items = $user->listedItems()
+                ->whereIn('status', [ItemStatus::AVAILABLE->value, ItemStatus::SOLD->value])
+                ->orderBy('created_at', 'desc')
+                ->get();
         }
 
-        return view('profile.mypage', compact('user', 'items', 'page'));
+        return view('profile.mypage', compact('user', 'items', 'page', 'totalUnreadCount'));
     }
 
 
@@ -79,7 +95,6 @@ class ProfileController extends Controller
 
         //画像の処理
         if ($request->hasFile('image_file')) {
-            // 古い画像がある場合は削除 (publicディスクから削除)
             if ($user->image) {
                 Storage::disk('public')->delete($user->image);
             }

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Enums\ItemStatus;
 
 /**
  * App\Models\User
@@ -91,14 +92,29 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile_completed' => 'boolean',
     ];
 
+    // ============================================
+    // 既存のリレーション
+    // ============================================
+
+    /**
+     * ユーザーが出品した商品（itemsリレーションのエイリアス）
+     */
     public function items()
     {
-        return $this->hasMany(Item::class,'listed_by');
+        return $this->hasMany(Item::class, 'listed_by');
+    }
+
+    /**
+     * ユーザーが出品した商品
+     */
+    public function listedItems()
+    {
+        return $this->hasMany(Item::class, 'listed_by');
     }
 
     public function comments()
     {
-        return $this->hasMany(Comment::class,'user_id');
+        return $this->hasMany(Comment::class, 'user_id');
     }
 
     public function favorites()
@@ -108,13 +124,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function isFavorited(Item $item)
     {
-        return $this->favorites()->where('item_id',$item->id)->exists();
-
+        return $this->favorites()->where('item_id', $item->id)->exists();
     }
 
-
-    public function address(){
-        return $this->hasOne(UserAddress::class,'user_id');
+    public function address()
+    {
+        return $this->hasOne(UserAddress::class, 'user_id');
     }
 
     public function purchase()
@@ -122,23 +137,114 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(PurchaseHistory::class, 'user_id');
     }
 
-    public function listedItems()
-    {
-        return $this->hasMany(Item::class, 'listed_by');
-    }
-
     /**
-     * このユーザーが購入した商品を取得 (purchase_histories.user_id = users.id を介して items を取得)
+     * このユーザーが購入した商品を取得
      */
     public function purchasedItems()
     {
         return $this->hasManyThrough(
             Item::class,
             PurchaseHistory::class,
-            'user_id',
-            'id',
-            'id',
-            'item_id'
+            'user_id',    // purchase_historiesテーブルの外部キー
+            'id',         // itemsテーブルの主キー
+            'id',         // usersテーブルの主キー
+            'item_id'     // purchase_historiesテーブルのローカルキー
         );
+    }
+
+    // ============================================
+    // 取引機能用の新しいリレーション
+    // ============================================
+
+    /**
+     * ユーザーが送信した取引メッセージ
+     */
+    public function transactionMessages()
+    {
+        return $this->hasMany(TransactionMessage::class);
+    }
+
+    /**
+     * ユーザーが評価したレーティング
+     */
+    public function givenRatings()
+    {
+        return $this->hasMany(Rating::class, 'from_user_id');
+    }
+
+    /**
+     * ユーザーが受けた評価
+     */
+    public function receivedRatings()
+    {
+        return $this->hasMany(Rating::class, 'to_user_id');
+    }
+
+    // ============================================
+    // 評価関連のヘルパーメソッド
+    // ============================================
+
+    /**
+     * ユーザーの評価平均を取得（四捨五入）
+     *
+     * @return int|null
+     */
+    public function getAverageRating()
+    {
+        return Rating::getAverageRating($this->id);
+    }
+
+    /**
+     * ユーザーの評価数を取得
+     *
+     * @return int
+     */
+    public function getRatingCount()
+    {
+        return Rating::getRatingCount($this->id);
+    }
+
+    // ============================================
+    // 取引機能用のヘルパーメソッド
+    // ============================================
+
+    /**
+     * 取引中の商品を取得（購入した商品 + 出品した商品）
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getTransactionItems()
+    {
+        // 購入した取引中の商品
+        $purchasedItems = $this->purchasedItems()
+            ->where('status', ItemStatus::IN_TRANSACTION->value)
+            ->with(['latestMessage', 'seller'])
+            ->get();
+
+        // 出品した取引中の商品
+        $listedItems = $this->listedItems()
+            ->where('status', ItemStatus::IN_TRANSACTION->value)
+            ->with(['latestMessage', 'buyer'])
+            ->get();
+
+        // 2つを結合して、最新メッセージの日時でソート
+        return $purchasedItems->concat($listedItems)
+            ->sortByDesc(function ($item) {
+                return $item->latestMessage ? $item->latestMessage->created_at : $item->created_at;
+            });
+    }
+
+    /**
+     * 未読メッセージの総数を取得
+     *
+     * @return int
+     */
+    public function getTotalUnreadCount()
+    {
+        $transactionItems = $this->getTransactionItems();
+
+        return $transactionItems->sum(function ($item) {
+            return $item->getUnreadCount($this->id);
+        });
     }
 }
