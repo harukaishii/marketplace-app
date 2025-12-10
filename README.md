@@ -44,12 +44,6 @@
 5. アプリケーションキーの作成
 　　`php artisan key:generate`
 
-6. トレージのシンボリックリンク作成
-**画像を表示するために必須の手順です**
-```bash
-php artisan storage:link
-```
-
 7. データベースのセットアップ
 ### マイグレーションの実行
 ```bash
@@ -76,7 +70,7 @@ chmod -R 775 storage bootstrap/cache
 　　`docker-compose up -d mailhog`
 
 9. 画面での操作
-ブラウザで `http://localhost` にアクセスしてください
+ブラウザで `http://localhost/login` にアクセスしてください
 
 ## 使用技術（実行環境）
 
