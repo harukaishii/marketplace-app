@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\PurchaseHistory;
 use App\Models\TransactionMessage;
 use App\Models\Rating;
 use App\Models\User;
@@ -70,28 +71,34 @@ class TransactionController extends Controller
         // 評価状況をチェック
         $buyerRated = false;
         $sellerRated = false;
-        $showRatingModal = false;
 
-        if ($item->status === ItemStatus::SOLD) {
-            // 購入者の評価をチェック
-            $buyerRating = Rating::where('item_id', $item->id)
-                ->where('from_user_id', $purchase->user_id)
-                ->where('to_user_id', $item->listed_by)
-                ->first();
-            $buyerRated = $buyerRating !== null;
+        // 購入者の評価をチェック
+        $buyerRating = Rating::where('item_id', $item->id)
+            ->where('from_user_id', $purchase->user_id)
+            ->where('to_user_id', $item->listed_by)
+            ->first();
+        $buyerRated = $buyerRating !== null;
 
-            // 出品者の評価をチェック
-            $sellerRating = Rating::where('item_id', $item->id)
-                ->where('from_user_id', $item->listed_by)
-                ->where('to_user_id', $purchase->user_id)
-                ->first();
-            $sellerRated = $sellerRating !== null;
+        // 出品者の評価をチェック
+        $sellerRating = Rating::where('item_id', $item->id)
+            ->where('from_user_id', $item->listed_by)
+            ->where('to_user_id', $purchase->user_id)
+            ->first();
+        $sellerRated = $sellerRating !== null;
 
-            // 出品者で、購入者が評価済みで自分が未評価の場合、モーダルを表示
-            if ($isSeller && $buyerRated && !$sellerRated) {
-                $showRatingModal = true;
+        // 評価ボタンを表示する条件
+        $canRate = false;
+        if ($item->isInTransaction()) {
+            if ($isBuyer && !$buyerRated) {
+                $canRate = true;  // 購入者で未評価
+            } elseif ($isSeller && !$sellerRated) {
+                $canRate = true;  // 出品者で未評価
             }
         }
+
+        // 評価状況を追加
+        $hasRated = $isBuyer ? $buyerRated : $sellerRated;
+        $buyerHasRated = $buyerRated;
 
         return view('transactions.show', compact(
             'item',
@@ -101,7 +108,9 @@ class TransactionController extends Controller
             'isBuyer',
             'transactionItems',
             'user',
-            'showRatingModal'
+            'canRate',
+            'hasRated',
+            'buyerHasRated'
         ));
     }
 
@@ -173,11 +182,6 @@ class TransactionController extends Controller
             abort(403, 'このメッセージを編集する権限がありません。');
         }
 
-        // 取引メッセージかチェック
-        if ($message->item_id !== $item->id) {
-            abort(404, 'メッセージが見つかりません。');
-        }
-
         // 画像の更新処理
         if ($request->hasFile('image')) {
             // 古い画像を削除
@@ -218,11 +222,6 @@ class TransactionController extends Controller
             abort(403, 'このメッセージを削除する権限がありません。');
         }
 
-        // 取引メッセージかチェック
-        if ($message->item_id !== $item->id) {
-            abort(404, 'メッセージが見つかりません。');
-        }
-
         // 画像があれば削除
         if ($message->image) {
             Storage::disk('public')->delete($message->image);
@@ -248,7 +247,7 @@ class TransactionController extends Controller
 
         // 取引中または売却済みステータスのチェック
         if (!$item->isInTransaction() && $item->status !== ItemStatus::SOLD) {
-            return redirect('/')
+            return redirect()->route('transactions.show', $item)
                 ->with('error', 'この商品は取引対象ではありません。');
         }
 
@@ -256,7 +255,7 @@ class TransactionController extends Controller
         $purchase = $item->purchase;
 
         if (!$purchase) {
-            return redirect('/')
+            return redirect()->route('transactions.show', $item)
                 ->with('error', '購入履歴が見つかりません。');
         }
 
@@ -278,7 +277,7 @@ class TransactionController extends Controller
             ->first();
 
         if ($existingRating) {
-            return redirect('/')
+            return redirect()->route('transactions.show', $item)
                 ->with('error', 'この取引は既に評価済みです。');
         }
 
@@ -294,26 +293,43 @@ class TransactionController extends Controller
                 'comment' => $request->comment,
             ]);
 
-            // 購入者が評価した場合のみ、ステータスをSOLDに変更してメール送信
-            if ($isBuyer && $item->isInTransaction()) {
+            // 相手が既に評価済みかチェック
+            $otherUserRating = Rating::where('item_id', $item->id)
+                ->where('from_user_id', $toUserId)
+                ->where('to_user_id', $user->id)
+                ->first();
+
+            // 両方が評価済みの場合のみ、ステータスをSOLDに変更
+            if ($otherUserRating && $item->isInTransaction()) {
                 $item->status = ItemStatus::SOLD;
                 $item->save();
 
-                // 出品者にメール送信
+                // 両方のユーザーにメール送信
+                $buyer = User::find($purchase->user_id);
                 $seller = User::find($item->listed_by);
-                if ($seller) {
-                    Mail::to($seller->email)->send(new TransactionCompleted($item, $user));
+
+                if ($buyer && $seller) {
+                    Mail::to($buyer->email)->send(new TransactionCompleted($item, $seller));
+                    Mail::to($seller->email)->send(new TransactionCompleted($item, $buyer));
                 }
             }
 
             DB::commit();
 
-            return redirect('/')
-                ->with('success', '評価を送信しました。ご利用ありがとうございました。');
+            // リダイレクト先を分岐
+            if ($otherUserRating) {
+                // 両方評価済み → 取引完了
+                return redirect('/')
+                    ->with('success', '評価を送信しました。取引が完了しました。ご利用ありがとうございました。');
+            } else {
+                // 相手の評価待ち → 取引画面に戻る
+                return redirect()->route('transactions.show', $item)
+                    ->with('success', '評価を送信しました。取引相手の評価をお待ちください。');
+            }
         } catch (Exception $e) {
             DB::rollBack();
 
-            return redirect('/')
+            return redirect()->route('transactions.show', $item)
                 ->with('error', '評価の送信中にエラーが発生しました。');
         }
     }

@@ -26,6 +26,9 @@ class DatabaseSeeder extends Seeder
                 FavoritesTableSeeder::class,
                 UserAddressesTableSeeder::class,
                 PurchaseHistoriesTableSeeder::class,
+                TransactionMessageTableSeeder::class,
+                RatingTableSeeder::class,
+                TestUserDataSeeder::class,
             ]);
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

@@ -35,10 +35,19 @@
 
             {{-- ヘッダー: ユーザー名と取引完了ボタン --}}
             <div class="transaction-header">
-                <h1 class="transaction-header__title">
-                    「{{ $otherUser ? $otherUser->name : 'ユーザー' }}」さんとの取引画面
-                </h1>
-                @if ($isBuyer)
+                <div class="transaction-header__left">
+                    <div class="transaction-header__avatar">
+                        @if ($otherUser && $otherUser->image)
+                            <img src="{{ Storage::url($otherUser->image) }}" alt="{{ $otherUser->name }}">
+                        @else
+                            <div class="transaction-header__avatar-placeholder"></div>
+                        @endif
+                    </div>
+                    <h1 class="transaction-header__title">
+                        「{{ $otherUser ? $otherUser->name : 'ユーザー' }}」さんとの取引画面
+                    </h1>
+                </div>
+                @if ($canRate)
                     <button type="button" class="transaction-header__complete-btn" onclick="openRatingModal()">
                         取引を完了する
                     </button>
@@ -84,7 +93,7 @@
                                                 <img src="{{ asset('storage/' . $message->image) }}" alt="添付画像">
                                             </div>
                                         @endif
-                                        <div class="chat-message__bubble chat-message__bubble--own">
+                                        <div class="chat-message__bubble">
                                             {{ $message->content }}
                                         </div>
                                     </div>
@@ -114,7 +123,7 @@
                                                 <img src="{{ asset('storage/' . $message->image) }}" alt="添付画像">
                                             </div>
                                         @endif
-                                        <div class="chat-message__bubble chat-message__bubble--other">
+                                        <div class="chat-message__bubble">
                                             {{ $message->content }}
                                         </div>
                                     </div>
@@ -129,41 +138,43 @@
                 </div>
             </div>
 
-            {{-- メッセージ入力エリア --}}
-            <div class="message-input-area">
-                <form action="{{ route('transactions.messages.store', $item->id) }}" method="POST" enctype="multipart/form-data" class="message-form">
-                    @csrf
+            {{-- メッセージ入力エリア（取引中のみ表示） --}}
+            @if ($item->isInTransaction())
+                <div class="message-input-area">
+                    <form action="{{ route('transactions.store', $item) }}" method="POST" enctype="multipart/form-data" class="message-form">
+                        @csrf
 
-                    {{-- エラーメッセージ --}}
-                    @if ($errors->any())
-                        <div class="message-form__errors">
-                            @foreach ($errors->all() as $error)
-                                <p class="error-message">{{ $error }}</p>
-                            @endforeach
+                        {{-- エラーメッセージ --}}
+                        @if ($errors->any())
+                            <div class="message-form__errors">
+                                @foreach ($errors->all() as $error)
+                                    <p class="error-message">{{ $error }}</p>
+                                @endforeach
+                            </div>
+                        @endif
+
+                        <div class="message-form__input-group">
+                            <input
+                                type="text"
+                                name="content"
+                                class="message-form__input"
+                                placeholder="取引メッセージを入力してください"
+                                value="{{ old('content', session('transaction_message_draft_' . $item->id)) }}">
+
+                            <label class="message-form__image-btn" title="画像を追加">
+                                <input type="file" name="image" accept=".jpg,.jpeg,.png" style="display: none;" id="imageInput">
+                                画像を追加
+                            </label>
+
+                            <button type="submit" class="message-form__submit-btn">
+                                <img src="{{ asset('storage/images/send-icon.jpg') }}" alt="送信" class="message-form__send-icon">
+                            </button>
                         </div>
-                    @endif
 
-                    <div class="message-form__input-group">
-                        <input
-                            type="text"
-                            name="content"
-                            class="message-form__input"
-                            placeholder="取引メッセージを入力してください"
-                            value="{{ old('content', session('transaction_message_draft_' . $item->id)) }}">
-
-                        <label class="message-form__image-btn" title="画像を追加">
-                            <input type="file" name="image" accept=".jpg,.jpeg,.png" style="display: none;" id="imageInput">
-                            画像を追加
-                        </label>
-
-                        <button type="submit" class="message-form__submit-btn">
-                            <img src="{{ asset('storage/images/send-icon.jpg') }}" alt="送信" class="message-form__send-icon">
-                        </button>
-                    </div>
-
-                    <span class="message-form__filename" id="imageName"></span>
-                </form>
-            </div>
+                        <span class="message-form__filename" id="imageName"></span>
+                    </form>
+                </div>
+            @endif
         </div>
     </div>
 </main>
@@ -230,13 +241,12 @@
 <div id="ratingModal" class="modal">
     <div class="modal-content modal-content--rating">
         <div class="modal-header">
-            <h2 class="modal-title">取引を完了する</h2>
+            <h2 class="modal-title">取引が完了しました。</h2>
             <button type="button" class="modal-close" onclick="closeRatingModal()">&times;</button>
         </div>
         <form action="{{ route('transactions.complete', $item) }}" method="POST">
             @csrf
             <div class="modal-body modal-body--rating">
-                <p class="rating-title">取引が完了しました。</p>
                 <p class="rating-description">今回の取引相手はどうでしたか？</p>
 
                 <div class="star-rating">
@@ -346,7 +356,7 @@ function openEditModal(messageId, content, image) {
     const removeImageFlag = document.getElementById('remove-image-flag');
 
     // フォームのアクションを設定
-    form.action = `/transactions/messages/${messageId}`;
+    form.action = `/transactions/{{ $item->id }}/messages/${messageId}`;
 
     // 内容を設定
     contentInput.value = content;
@@ -385,7 +395,7 @@ function openDeleteModal(messageId) {
     const form = document.getElementById('deleteForm');
 
     // フォームのアクションを設定
-    form.action = `/transactions/messages/${messageId}`;
+    form.action = `/transactions/{{ $item->id }}/messages/${messageId}`;
 
     modal.style.display = 'block';
 }

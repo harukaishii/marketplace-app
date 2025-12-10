@@ -66,8 +66,8 @@ Route::middleware(['auth','verified'])->group(function(){
         ->name('transactions.show');
 
     // メッセージ投稿
-    Route::post('/transactions/{item}/messages', [TransactionController::class, 'storeMessage'])
-        ->name('transactions.messages.store');
+    Route::post('/transactions/{item}/messages', [TransactionController::class, 'store'])
+    ->name('transactions.store');
 
     // メッセージ編集
     Route::put('/transactions/messages/{message}', [TransactionController::class, 'updateMessage'])

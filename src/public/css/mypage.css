@@ -78,20 +78,18 @@ ul {
 }
 
 .star {
-    font-size: 18px;
+    font-size: 30px;
+    /* 統一: 30px */
     line-height: 1;
 }
 
 .star--filled {
     color: #FFF048;
-    font-size: 30px;
-
 }
 
 .star--empty {
     color: #D9D9D9;
 }
-
 
 .user-profile__edit-button {
     background-color: #fff;
@@ -183,7 +181,7 @@ ul {
    商品アイテム（出品/購入/取引中 共通）
 ======================================== */
 .product-item {
-    background-color: #fff;
+    background-color: #ffffff;
     border: 1px solid #eee;
     border-radius: 5px;
     overflow: hidden;
@@ -247,7 +245,7 @@ ul {
     top: 8px;
     left: 8px;
     background-color: #ff4444;
-    color: white;
+    color: #FFFFFF;
     font-size: 12px;
     font-weight: bold;
     padding: 4px 8px;
@@ -273,7 +271,8 @@ ul {
     }
 
     .star {
-        font-size: 16px;
+        font-size: 20px;
+        /* レスポンシブ時も統一 */
     }
 
     .rating-count {

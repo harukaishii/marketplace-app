@@ -24,7 +24,7 @@ class UsersTableSeeder extends Seeder
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
             'profile_completed' => '1',
-            'image' => 'images/users/person_1.jpeg',
+            'image' => 'images/users/person_4.jpeg',
         ]);
 
         // Fakerを使ってランダムなユーザーを9人作成
