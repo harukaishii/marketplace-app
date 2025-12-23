@@ -2,3 +2,8 @@
 !.gitignore
 !.gitkeep
 !images/
+!images/users/
+!images/users/**
+!images/*.svg
+!images/*.jpg
+!images/*.png
