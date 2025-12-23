@@ -18,20 +18,20 @@ use App\Http\Controllers\TransactionController;
 |
 */
 //一覧と詳細は未ログインで参照可、検索も動く
-Route::get('/', [ItemController::class,'index'])->name('index');
-Route::get('/item/{item_id}',[ItemController::class,'show'])->name('item.show');
+Route::get('/', [ItemController::class, 'index'])->name('index');
+Route::get('/item/{item_id}', [ItemController::class, 'show'])->name('item.show');
 
 //検索
 Route::get('/search', [App\Http\Controllers\ItemController::class, 'search'])->name('item.search');
 
 
 //ログアウト_認証済みでないとログアウトできなくなるのでverifiedから外す
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
     Route::post('/logout', [\Laravel\Fortify\Http\Controllers\AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
 
 
-Route::middleware(['auth','verified'])->group(function(){
+Route::middleware(['auth', 'verified'])->group(function () {
 
     //コメント
     Route::post('/item/{itemId}/comment', [ItemController::class, 'storeComment'])->name('item.comment.store');
@@ -53,13 +53,17 @@ Route::middleware(['auth','verified'])->group(function(){
     Route::post('/purchase/{item}', [PurchaseController::class, 'store'])->name('purchase.store');
 
     //決済
-    Route::post('/checkout',[CheckoutController::class,'create'])->name('checkout.create');
-    Route::get('/checkout/success',[CheckoutController::class,'success'])->name('checkout.success');
-    Route::get('/checkout/cancel',[CheckoutController::class,'cancel'])->name('checkout.cancel');
+    Route::post('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
+    Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+    Route::get('/checkout/cancel', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
 
     //住所関連
     Route::get('/purchase/address/{item}', [PurchaseController::class, 'editAddress'])->name('purchase.editAddress');
     Route::post('/purchase/address/update', [PurchaseController::class, 'updateAddress'])->name('purchase.updateAddress');
+
+    // ========================================
+    // 取引チャット関連（修正版）
+    // ========================================
 
     // 取引チャット画面
     Route::get('/transactions/{item}', [TransactionController::class, 'show'])
@@ -67,19 +71,17 @@ Route::middleware(['auth','verified'])->group(function(){
 
     // メッセージ投稿
     Route::post('/transactions/{item}/messages', [TransactionController::class, 'store'])
-    ->name('transactions.store');
+        ->name('transactions.store');
 
-    // メッセージ編集
-    Route::put('/transactions/messages/{message}', [TransactionController::class, 'updateMessage'])
+    // メッセージ編集（修正）
+    Route::put('/transactions/{item}/messages/{message}', [TransactionController::class, 'update'])
         ->name('transactions.messages.update');
 
-    // メッセージ削除
-    Route::delete('/transactions/messages/{message}', [TransactionController::class, 'destroyMessage'])
+    // メッセージ削除（修正）
+    Route::delete('/transactions/{item}/messages/{message}', [TransactionController::class, 'destroy'])
         ->name('transactions.messages.destroy');
 
     // 取引完了・評価
     Route::post('/transactions/{item}/complete', [TransactionController::class, 'complete'])
         ->name('transactions.complete');
-
 });
-

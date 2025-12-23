@@ -20,7 +20,7 @@
                     <img src="{{ asset('storage/images/logo.svg') }}" alt="header_logo">
                 </a>
             </div>
-                        @if (!Request::is('login') && !Request::is('register'))
+                        @if (!Request::is('login') && !Request::is('register') && !Request::is('transactions/*'))
                 <nav class="header__nav">
                     <form class="search-form" method="GET" action="{{ route('index') }}">
                         <input type="text" name="keyword" value="{{ request('keyword') }}" placeholder="なにをお探しですか？" class="search-form__input" />

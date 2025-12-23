@@ -162,7 +162,7 @@
                                 value="{{ old('content', session('transaction_message_draft_' . $item->id)) }}">
 
                             <label class="message-form__image-btn" title="画像を追加">
-                                <input type="file" name="image" accept=".jpg,.jpeg,.png" style="display: none;" id="imageInput">
+                                <input type="file" name="image" accept="image/*" style="display: none;" id="imageInput">
                                 画像を追加
                             </label>
 
@@ -203,7 +203,7 @@
                         <button type="button" class="btn-remove-image" onclick="removeCurrentImage()">画像を削除</button>
                         <input type="hidden" name="remove_image" id="remove-image-flag" value="0">
                     </div>
-                    <input type="file" name="image" id="edit-image" accept=".jpg,.jpeg,.png" class="form-control">
+                    <input type="file" name="image" id="edit-image" accept="image/*" class="form-control">
                     <span class="image-name" id="edit-image-name"></span>
                 </div>
             </div>
@@ -287,6 +287,43 @@ document.addEventListener('DOMContentLoaded', function() {
                 successMessage.style.display = 'none';
             }, 500);
         }, 3000);
+    }
+
+    // ========================================
+    // ✅ 追加: 出品者の場合、購入者が評価済みなら自動でモーダルを開く
+    // ========================================
+    @if(isset($shouldAutoOpenModal) && $shouldAutoOpenModal)
+        openRatingModal();
+    @endif
+
+    // 下書き保存機能
+    const messageInput = document.querySelector('.message-form__input');
+    const itemId = {{ $item->id }};
+    const storageKey = `transaction_message_draft_${itemId}`;
+
+    // ページ読み込み時に下書きを復元
+    if (messageInput) {
+        const savedDraft = sessionStorage.getItem(storageKey);
+        if (savedDraft && !messageInput.value) {
+            messageInput.value = savedDraft;
+        }
+
+        // 入力時に自動保存
+        messageInput.addEventListener('input', function() {
+            if (this.value.trim()) {
+                sessionStorage.setItem(storageKey, this.value);
+            } else {
+                sessionStorage.removeItem(storageKey);
+            }
+        });
+    }
+
+    // フォーム送信時に下書きをクリア
+    const messageForm = document.querySelector('.message-form');
+    if (messageForm) {
+        messageForm.addEventListener('submit', function() {
+            sessionStorage.removeItem(storageKey);
+        });
     }
 
     // 画像選択時にファイル名を表示

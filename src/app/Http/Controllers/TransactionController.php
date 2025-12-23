@@ -86,13 +86,17 @@ class TransactionController extends Controller
             ->first();
         $sellerRated = $sellerRating !== null;
 
-        // 評価ボタンを表示する条件
+        // 評価ボタンを表示する条件（修正）
         $canRate = false;
+        $shouldAutoOpenModal = false; 
+
         if ($item->isInTransaction()) {
             if ($isBuyer && !$buyerRated) {
-                $canRate = true;  // 購入者で未評価
-            } elseif ($isSeller && !$sellerRated) {
-                $canRate = true;  // 出品者で未評価
+                // 購入者で未評価 → ボタン表示
+                $canRate = true;
+            } elseif ($isSeller && !$sellerRated && $buyerRated) {
+                // 出品者で未評価 かつ 購入者が評価済み → 自動でモーダルを開く
+                $shouldAutoOpenModal = true;
             }
         }
 
@@ -110,7 +114,8 @@ class TransactionController extends Controller
             'user',
             'canRate',
             'hasRated',
-            'buyerHasRated'
+            'buyerHasRated',
+            'shouldAutoOpenModal' // 追加
         ));
     }
 
@@ -293,6 +298,17 @@ class TransactionController extends Controller
                 'comment' => $request->comment,
             ]);
 
+            $buyer = User::find($purchase->user_id);
+            $seller = User::find($item->listed_by);
+
+            if ($isBuyer && $seller) {
+                // 購入者が評価 → 出品者にメール送信
+                Mail::to($seller->email)->send(new TransactionCompleted($item, $buyer));
+            } elseif ($isSeller && $buyer) {
+                // 出品者が評価 → 購入者にメール送信
+                Mail::to($buyer->email)->send(new TransactionCompleted($item, $seller));
+            }
+
             // 相手が既に評価済みかチェック
             $otherUserRating = Rating::where('item_id', $item->id)
                 ->where('from_user_id', $toUserId)
@@ -303,15 +319,6 @@ class TransactionController extends Controller
             if ($otherUserRating && $item->isInTransaction()) {
                 $item->status = ItemStatus::SOLD;
                 $item->save();
-
-                // 両方のユーザーにメール送信
-                $buyer = User::find($purchase->user_id);
-                $seller = User::find($item->listed_by);
-
-                if ($buyer && $seller) {
-                    Mail::to($buyer->email)->send(new TransactionCompleted($item, $seller));
-                    Mail::to($seller->email)->send(new TransactionCompleted($item, $buyer));
-                }
             }
 
             DB::commit();

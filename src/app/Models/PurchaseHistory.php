@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\PaymentType;
-use Faker\Provider\ar_EG\Payment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,10 +16,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property PaymentType $payment_type
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\UserAddress> $addresses
- * @property-read int|null $addresses_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $users
- * @property-read int|null $users_count
+ * @property-read \App\Models\User $user
+ * @property-read \App\Models\Item $item
+ * @property-read \App\Models\UserAddress $userAddress
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseHistory newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseHistory newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PurchaseHistory query()
@@ -48,19 +46,27 @@ class PurchaseHistory extends Model
         'payment_type' => PaymentType::class,
     ];
 
-    public function users()
+    /**
+     * 購入者とのリレーション
+     */
+    public function user()
     {
-        return $this->belongsToMany(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function items()
+    /**
+     * 商品とのリレーション
+     */
+    public function item()
     {
-        return $this->belongsToOne(Item::class, 'item_id');
+        return $this->belongsTo(Item::class, 'item_id');
     }
 
-    public function addresses()
+    /**
+     * 配送先住所とのリレーション
+     */
+    public function userAddress()
     {
-        return $this->belongsToMany(UserAddress::class, 'use_address_id');
+        return $this->belongsTo(UserAddress::class, 'user_address_id');
     }
-
 }

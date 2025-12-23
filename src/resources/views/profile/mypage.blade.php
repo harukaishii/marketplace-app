@@ -59,7 +59,7 @@
                 {{-- 取引中タブ --}}
                 <li class="profile-tabs__item">
                     <a href="{{ route('profile', ['page' => 'transaction']) }}" class="profile-tabs__link {{ $page === 'transaction' ? 'profile-tabs__link--active' : '' }}">
-                        取引中
+                        取引中の商品
                         @if(isset($totalUnreadCount) && $totalUnreadCount > 0)
                             <span class="unread-badge">{{ $totalUnreadCount }}</span>
                         @endif
