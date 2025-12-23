@@ -88,15 +88,29 @@ class TransactionController extends Controller
 
         // 評価ボタンを表示する条件（修正）
         $canRate = false;
-        $shouldAutoOpenModal = false; 
+        $shouldAutoOpenModal = false; // 自動でモーダルを開くかどうか
+
+        // デバッグ情報（後で削除）
+        \Log::info('Transaction Debug', [
+            'item_id' => $item->id,
+            'item_status' => $item->status->name,
+            'user_id' => $user->id,
+            'isBuyer' => $isBuyer,
+            'isSeller' => $isSeller,
+            'buyerRated' => $buyerRated,
+            'sellerRated' => $sellerRated,
+            'isInTransaction' => $item->isInTransaction(),
+        ]);
 
         if ($item->isInTransaction()) {
             if ($isBuyer && !$buyerRated) {
                 // 購入者で未評価 → ボタン表示
                 $canRate = true;
+                \Log::info('購入者: ボタン表示');
             } elseif ($isSeller && !$sellerRated && $buyerRated) {
                 // 出品者で未評価 かつ 購入者が評価済み → 自動でモーダルを開く
                 $shouldAutoOpenModal = true;
+                \Log::info('出品者: 自動モーダル');
             }
         }
 
@@ -298,15 +312,13 @@ class TransactionController extends Controller
                 'comment' => $request->comment,
             ]);
 
-            $buyer = User::find($purchase->user_id);
-            $seller = User::find($item->listed_by);
-
-            if ($isBuyer && $seller) {
-                // 購入者が評価 → 出品者にメール送信
-                Mail::to($seller->email)->send(new TransactionCompleted($item, $buyer));
-            } elseif ($isSeller && $buyer) {
-                // 出品者が評価 → 購入者にメール送信
-                Mail::to($buyer->email)->send(new TransactionCompleted($item, $seller));
+            // 評価送信時に相手にメールを送信
+            // 購入者が評価した場合のみ、出品者にメール送信
+            if ($isBuyer) {
+                $seller = User::find($item->listed_by);
+                if ($seller) {
+                    Mail::to($seller->email)->send(new TransactionCompleted($item, $user));
+                }
             }
 
             // 相手が既に評価済みかチェック
