@@ -89,7 +89,7 @@
 - **決済処理**: stripe
 
 ## ER図
-![ER図](ER.png)
+![ER図](ER2_png)
 
 ## URL
 - 開発環境：http://localhost/
